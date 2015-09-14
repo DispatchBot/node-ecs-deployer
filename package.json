@@ -1,0 +1,16 @@
+{
+  "name": "ecs-deploy",
+  "version": "0.0.0",
+  "description": "A set of utilities for automating deployments of docker images to ECS",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Brad Seefeld",
+  "license": "ISC",
+  "dependencies": {
+    "aws-sdk": "^2.1.50",
+    "promise": "^7.0.4",
+    "request": "^2.61.0"
+  }
+}
