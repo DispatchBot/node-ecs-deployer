@@ -1,4 +1,4 @@
-= AWS ECS Deployer Utility
+# AWS ECS Deployer Utility
 
 This tool helps simplify automated docker deployments to Amazon's ECS. In short the tool will:
 
@@ -9,7 +9,7 @@ This tool helps simplify automated docker deployments to Amazon's ECS. In short 
 1. Wait for ECS to complete the deploy.
 1. Scale your auto-scaling group back down to normal size. This is optional.
 
-== Getting Started
+## Getting Started
 
 ```
 npm install ecs-deployer --save
@@ -51,7 +51,7 @@ deployer.on('progress', function(e) {
 })
 ```
 
-Current limitations:
+## Current limitations
 
 * Only supports checking image tags for Quay.io
 * Assumes you are storing your task definitions in S3
