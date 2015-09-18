@@ -27,9 +27,20 @@ var deployer = new EcsDeployer({
 
   services: [
     {
-      taskDefinitionLocation: 's3://example/ecs-task-definition.json',
-      name: 'my-web-service', // ECS service name. Must exist.
-      cluster: 'web', // ECS cluster name. Must exist.
+      taskDefinition: {
+        // This probably wont work. AWS S3 fetches will fail if you have configured
+        // a region that differs from your S3 bucket (even if that bucket is global).
+        // If that is you, use the config below instead.
+        url: "s3://example/ecs-task-definition.json"
+
+        // or
+        bucket: "example",
+        key: "ecs-task-definition.json",
+        host: "s3-external-1.amazonaws.com"
+      },
+
+      name: 'my-web-service', // ECS service name. Required.
+      cluster: 'web', // ECS cluster name. Required.
       autoScaling: {
         name: 'my-web-autoscaling-group' // Optional
       }

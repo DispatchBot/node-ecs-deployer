@@ -5,10 +5,8 @@ var AWS = require('aws-sdk'),
   util = require('util'),
   Quay = require('./lib/repos/quay');
 
-// TODO: This needs to be in a config
-AWS.config.update({region: 'us-east-1'});
 
-
+AWS.config.update({region: 'us-west-2'});
 
 var Deployer = function(app) {
   EventEmitter.call(this);
@@ -51,7 +49,7 @@ Deployer.prototype._isValid = function() {
 Deployer.prototype.isReady = function(version) {
   var deployer = this;
 
-  // TODO: Support multiple repo types
+  // TODO: Support multiple repo types (e.g., docker hub)
   var quay = new Quay(this.app.docker.url, this.app.docker.auth);
 
   var quayDeferred = quay.isExists(version);
@@ -74,15 +72,33 @@ Deployer.prototype.deploy = function(version) {
 
   return this._isValid().then(function() {
     return d.isReady(version).then(function() {
-      console.log('Everything exists') // TODO: Emit event
+      d.emit('ready')
 
       var deferreds = [];
       for (var i = 0; i < d.services.length; i++) {
         deferreds.push(d.services[i].deploy(version));
       }
 
-      return Promise.all(deferreds).then(function() {
-        d.emit('deployed');
+      // Number of services that have completed their deploys
+      var completed = 0;
+
+      return Promise.all(deferreds).then(function(completedServices) {
+        for (var i = 0; i < completedServices.length; i++) {
+          d.emit('deployed', completedServices[i]);
+        }
+
+        completed += completedServices.length;
+
+        if (completed >= d.app.services.length) {
+          d.emit('end');
+        }
+      }, function(err) {
+        d.emit('failure', err);
+
+        completed += err.length;
+        if (completed >= d.app.services.length) {
+          d.emit('end');
+        }
       })
     });
   });
