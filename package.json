@@ -1,6 +1,6 @@
 {
   "name": "ecs-deployer",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "A set of utilities for automating deployments of docker images to ECS",
   "main": "index.js",
   "scripts": {
