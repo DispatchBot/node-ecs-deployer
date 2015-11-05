@@ -17,9 +17,37 @@ npm install ecs-deployer --save
 
 ## Configuration
 
-Under the hood we are using the NodeJS AWS SDK. You can configure your credentials (several ways)[http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/node-configuring.html].
+Under the hood we are using the NodeJS AWS SDK. You can configure your credentials [several ways](http://docs.aws.amazon.com/AWSJavaScriptSDK/guide/node-configuring.html).
 
 The AWS Region must be configured via an environment variable. Make sure to set `AWS_REGION` to whatever AWS region your resources are located in.
+
+The user should have the following policy attached:
+```
+{
+    "Version": "2012-10-17",
+    "Statement": [
+        {
+            "Effect": "Allow",
+            "Action": [
+                "ecs:DescribeClusters",
+                "ecs:DescribeServices",
+                "ecs:DescribeTaskDefinition",
+                "ecs:DescribeTasks",
+                "ecs:ListServices",
+                "ecs:ListTaskDefinitions",
+                "ecs:ListTasks",
+                "ecs:RegisterTaskDefinition",
+                "ecs:UpdateService",
+                "autoscaling:DescribeAutoScalingGroups",
+                "autoscaling:SetDesiredCapacity"
+            ],
+            "Resource": [
+                "*"
+            ]
+        }
+    ]
+}
+```
 
 ## Usage
 
