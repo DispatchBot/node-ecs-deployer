@@ -2,8 +2,7 @@ var AWS = require('aws-sdk'),
   Promise = require('promise'),
   Service = require('./lib/service'),
   EventEmitter = require('events').EventEmitter,
-  util = require('util'),
-  Quay = require('./lib/repos/quay');
+  util = require('util')
 
 
 AWS.config.update({region: process.env.AWS_REGION});
@@ -49,17 +48,18 @@ Deployer.prototype._isValid = function() {
 Deployer.prototype.isReady = function(version) {
   var deployer = this;
 
-  // TODO: Support multiple repo types (e.g., docker hub)
-  var quay = new Quay(this.app.docker.url, this.app.docker.auth);
+  var repoType = this.app.docker.repo || 'quay';
+  var Repo = require('./lib/repos/'+repoType.toLowerCase());
+  var repo = new Repo(this.app.docker.url, this.app.docker.auth);
 
-  var quayDeferred = quay.isExists(version);
-  quayDeferred.then(function() {
-    deployer.emit('progress', { msg: 'Found tagged docker image', service: { name: 'quay' }});
+  var tagCheckDeferred = repo.isExists(version);
+  tagCheckDeferred.then(function() {
+    deployer.emit('progress', { msg: 'Found tagged docker image', service: { name: repoType }});
   })
 
   // TODO: Optionally check git too
 
-  var deferreds = [ quayDeferred ];
+  var deferreds = [ tagCheckDeferred ];
   for (var i = 0; i < this.services.length; i++) {
     deferreds.push(this.services[i].isReady(version));
   }
