@@ -5,8 +5,9 @@ var AWS = require('aws-sdk'),
   util = require('util'),
   Quay = require('./lib/repos/quay');
 
-
-AWS.config.update({region: process.env.AWS_REGION});
+if (!AWS.config.region) {
+  AWS.config.update({region: process.env.AWS_REGION});
+}
 
 var Deployer = function(app) {
   EventEmitter.call(this);
