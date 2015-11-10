@@ -57,7 +57,8 @@ var EcsDeployer = require('ecs-deployer')
 
 var deployer = new EcsDeployer({
   docker: {
-    url: 'https://quay.io/username/image-name'
+    type: 'quay', // supported: 'quay' or 'none' (checking bypassed)
+    url: 'https://quay.io/username/image-name',
     auth: ''
   },
 
