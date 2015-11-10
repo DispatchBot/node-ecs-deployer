@@ -50,7 +50,7 @@ Deployer.prototype.isReady = function(version) {
 
   var repoType = this.app.docker.repo || 'quay';
   var Repo = require('./lib/repos/'+repoType.toLowerCase());
-  var repo = new Repo(this.app.docker.url, this.app.docker.auth);
+  var repo = new Repo(this.app.docker);
 
   var tagCheckDeferred = repo.isExists(version);
   tagCheckDeferred.then(function() {
