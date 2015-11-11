@@ -64,7 +64,7 @@ var deployer = new EcsDeployer({
   services: [
     {
       taskDefinition: {
-        "name": "foo" // This should already exist in ECS. Required.
+        "family": "foo" // This should already exist in ECS. Required.
       },
 
       name: 'my-web-service', // ECS service name. Required.
