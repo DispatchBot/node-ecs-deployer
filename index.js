@@ -68,7 +68,8 @@ Deployer.prototype.isReady = function(version) {
   return Promise.all(deferreds);
 };
 
-Deployer.prototype.deploy = function(version) {
+// imagePath is optional, and can be carried through the function calls as 'undefined'
+Deployer.prototype.deploy = function(version, imagePath) {
   var d = this;
 
   return this._isValid().then(function() {
@@ -77,7 +78,7 @@ Deployer.prototype.deploy = function(version) {
 
       var deferreds = [];
       for (var i = 0; i < d.services.length; i++) {
-        deferreds.push(d.services[i].deploy(version));
+        deferreds.push(d.services[i].deploy(version, imagePath));
       }
 
       // Number of services that have completed their deploys
