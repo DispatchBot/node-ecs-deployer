@@ -8,6 +8,7 @@ if (!AWS.config.region) {
   AWS.config.update({region: process.env.AWS_REGION});
 }
 
+// imagePath can be optionally defined to control a deploy
 var Deployer = function(app) {
   EventEmitter.call(this);
   this.app = app;
@@ -68,8 +69,8 @@ Deployer.prototype.isReady = function(version) {
   return Promise.all(deferreds);
 };
 
-// imagePath is optional, and can be carried through the function calls as 'undefined'
-Deployer.prototype.deploy = function(version, imagePath) {
+// imagePath can be carried through the function calls as 'undefined'
+Deployer.prototype.deploy = function(version) {
   var d = this;
 
   return this._isValid().then(function() {
@@ -78,7 +79,7 @@ Deployer.prototype.deploy = function(version, imagePath) {
 
       var deferreds = [];
       for (var i = 0; i < d.services.length; i++) {
-        deferreds.push(d.services[i].deploy(version, imagePath));
+        deferreds.push(d.services[i].deploy(version, d.services[i].service.imagePath));
       }
 
       // Number of services that have completed their deploys

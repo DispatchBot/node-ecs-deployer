@@ -72,7 +72,8 @@ var deployer = new EcsDeployer({
       cluster: 'web', // ECS cluster name. Required.
       autoScaling: {
         name: 'my-web-autoscaling-group' // Optional
-      }
+      },
+      imagePath: 'site/organization/repo' // Optional - example: quay.io/MyOrganization/my-repo
     }
   ]
 });
@@ -96,3 +97,4 @@ deployer.on('progress', function(e) {
 * Only supports checking image tags for Quay.io
 * Assumes a single region deployment.
 * Assumes that all container definitions within a task definition should be updated with the given version string.
+  * If "imagePath" parameter is supplied, container will only update if the desired image is stored in the imagePath location
