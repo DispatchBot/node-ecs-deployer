@@ -8,7 +8,7 @@ if (!AWS.config.region) {
   AWS.config.update({region: process.env.AWS_REGION});
 }
 
-// imagePath can be optionally defined to control a deploy
+// imagePath can be optionally defined in the manifest to control a deploy
 var Deployer = function(app) {
   EventEmitter.call(this);
   this.app = app;
