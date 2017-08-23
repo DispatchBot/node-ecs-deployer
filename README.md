@@ -12,7 +12,7 @@ This tool helps simplify automated docker deployments to Amazon's ECS. In short 
 ## Getting Started
 
 ```
-npm install ecs-deployer --save
+yarn add ecs-deployer --dev
 ```
 
 ## Configuration
@@ -39,7 +39,8 @@ The user should have the following policy attached:
                 "ecs:RegisterTaskDefinition",
                 "ecs:UpdateService",
                 "autoscaling:DescribeAutoScalingGroups",
-                "autoscaling:SetDesiredCapacity"
+                "autoscaling:SetDesiredCapacity",
+                "ecr:DescribeImages"
             ],
             "Resource": [
                 "*"
@@ -49,17 +50,20 @@ The user should have the following policy attached:
 }
 ```
 
+The `ecr:DescribeImages` is only needed if you are also hosting your images in ECR.
+
 ## Usage
 
 A sample deploy:
 ```
-var EcsDeployer = require('ecs-deployer')
+const EcsDeployer = require('ecs-deployer')
 
-var deployer = new EcsDeployer({
+const deployer = new EcsDeployer({
   docker: {
-    type: 'quay', // supported: 'quay' or 'none' (checking bypassed)
-    url: 'https://quay.io/username/image-name',
-    auth: ''
+    type: 'quay', // supported: 'quay', 'ecr', or 'none' (checking bypassed)
+    url: 'https://quay.io/username/image-name', // required for quay
+    auth: '' // required for quay
+    repository: 'foo/bar' // required for ECR
   },
 
   services: [
@@ -94,7 +98,4 @@ deployer.on('progress', function(e) {
 
 ## Current limitations
 
-* Only supports checking image tags for Quay.io
 * Assumes a single region deployment.
-* Assumes that all container definitions within a task definition should be updated with the given version string.
-  * If "imagePath" parameter is supplied, container will only update if the desired image is stored in the imagePath location

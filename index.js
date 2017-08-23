@@ -50,13 +50,13 @@ Deployer.prototype._isValid = function() {
 Deployer.prototype.isReady = function(version) {
   var deployer = this;
 
-  var repoType = this.app.docker.repo || 'quay';
-  var Repo = require('./lib/repos/'+repoType.toLowerCase());
+  var repoType = this.app.docker.type || 'quay';
+  var Repo = require(`./lib/repos/${repoType.toLowerCase()}`);
   var repo = new Repo(this.app.docker);
 
   var tagCheckDeferred = repo.isExists(version);
-  tagCheckDeferred.then(function() {
-    deployer.emit('progress', { msg: 'Found tagged docker image', service: { name: repoType }});
+  tagCheckDeferred.then(() => {
+    this.emit('progress', { msg: 'Found tagged docker image', service: { name: repoType }});
   })
 
   // TODO: Optionally check git too
